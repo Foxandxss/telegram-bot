@@ -24,7 +24,6 @@ export class RedditPlugin implements Plugin {
     // Cache is empty
     if (!this.images.length) {
       this.fetchInProgress = true;
-      console.log('In subbredit');
       this.images = await this.request();
       this.shuffle(this.images);
       this.fetchInProgress = false;

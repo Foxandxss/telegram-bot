@@ -22,14 +22,19 @@ config.plugins.forEach(plugin => {
 const bot = new TelegramBot(config.token, {polling: true});
 
 bot.on('message', (msg) => {
-  if (msg.text.toLowerCase().indexOf('!') !== 0) return;
-  
-  const usablePlugins = plugins.filter(p => p.command === msg.text.toLowerCase().substr(1));
-  usablePlugins.forEach(up => {
-    if (up.fetchInProgress) {
-      bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
-    } else {
-      up.exec().then(image => bot.sendPhoto(msg.chat.id, image));
-    }
-  });
+  try {
+    if (!msg.text || msg.text.toLowerCase().indexOf('!') !== 0) return;
+    
+    const usablePlugins = plugins.filter(p => p.command === msg.text.toLowerCase().substr(1));
+    usablePlugins.forEach(up => {
+      if (up.fetchInProgress) {
+        bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
+      } else {
+        up.exec().then(image => bot.sendPhoto(msg.chat.id, image));
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    console.error("MSG", msg);
+  }
 });
