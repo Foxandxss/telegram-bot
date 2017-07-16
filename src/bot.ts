@@ -15,7 +15,7 @@ bot.on('message', (msg) => {
   try {
     if (!msg.text || msg.text.toLowerCase().indexOf('!') !== 0) return;
     
-    const usablePlugins = availablePlugins.filter(p => p.command === msg.text.toLowerCase().substr(1));
+    const usablePlugins = availablePlugins.filter(p => p.command === msg.text.toLowerCase());
     usablePlugins.forEach(up => {
       up.exec(bot, msg);
     });

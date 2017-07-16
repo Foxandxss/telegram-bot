@@ -12,7 +12,7 @@ export class RedditPlugin implements Plugin {
 
   constructor(public command: string, subreddits: string[], limit = 10) {
     this.url = this.buildUrl(subreddits, limit);
-    this.description = `A random image from the following subreddits: ${subreddits.join(' ')}`;
+    this.description = `Una imagen aleatoria de los siguientes subreddits: ${subreddits.join(' ')}`;
   }
 
   buildUrl(subreddits: string[], limit: number) {
