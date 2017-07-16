@@ -7,17 +7,19 @@ import { Plugin } from './plugin.interface';
 export class RedditPlugin implements Plugin {
   private images: string[] = [];
   private url: string;
+  description: string;
   fetchInProgress = false;
 
   constructor(public command: string, subreddits: string[], limit = 10) {
     this.url = this.buildUrl(subreddits, limit);
+    this.description = `A random image from the following subreddits: ${subreddits.join(' ')}`;
   }
 
   buildUrl(subreddits: string[], limit: number) {
     return `https://www.reddit.com/r/${subreddits.join('+')}/.json?limit=${limit}`;
   }
 
-  async exec() {
+  async exec(bot: any, msg: any) {
     // If it is already fetching, just forget about it
     // TODO give back a better result than nothing
     if (this.fetchInProgress) return;
@@ -28,7 +30,12 @@ export class RedditPlugin implements Plugin {
       this.shuffle(this.images);
       this.fetchInProgress = false;
     }
-    return await Promise.resolve(this.images.pop());
+
+    if (this.fetchInProgress) {
+      bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
+    } else {
+      bot.sendPhoto(msg.chat.id, this.images.pop());
+    }
   }
 
   async request() {

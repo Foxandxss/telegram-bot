@@ -27,11 +27,7 @@ bot.on('message', (msg) => {
     
     const usablePlugins = plugins.filter(p => p.command === msg.text.toLowerCase().substr(1));
     usablePlugins.forEach(up => {
-      if (up.fetchInProgress) {
-        bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
-      } else {
-        up.exec().then(image => bot.sendPhoto(msg.chat.id, image));
-      }
+      up.exec(bot, msg);
     });
   } catch (e) {
     console.error(e);
