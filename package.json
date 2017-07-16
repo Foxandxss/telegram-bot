@@ -1,0 +1,30 @@
+{
+  "name": "telegram-bot",
+  "version": "1.0.0",
+  "description": "A complete telegram bot with plugins",
+  "scripts": {
+    "start": "npm run build && npm run serve",
+    "build": "rimraf dist/ && webpack",
+    "serve": "node dist/bot.js"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "plugins"
+  ],
+  "author": "Jesus Rodriguez <Foxandxss@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^1.7.1",
+    "node-telegram-bot-api": "^0.27.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^1.6.7",
+    "@types/node-telegram-bot-api": "^0.27.0",
+    "awesome-typescript-loader": "^3.2.1",
+    "json-loader": "^0.5.4",
+    "rimraf": "^2.6.1",
+    "typescript": "^2.4.1",
+    "webpack": "^3.3.0"
+  }
+}

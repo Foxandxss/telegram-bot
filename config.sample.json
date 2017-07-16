@@ -1,0 +1,13 @@
+{
+  "token": "",
+  "plugins": [
+    {
+      "name": "reddit",
+      "command": "command_name",
+      "subreddits": [
+        "Natures_Pictures", "pics"
+      ],
+      "limit": 100
+    }
+  ]
+}
