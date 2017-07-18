@@ -1,4 +1,6 @@
+import { scrapeUrl } from './../Helpers/gifScrapper';
 import fetch from 'node-fetch';
+const path = require('path');
 
 import { Plugin } from './plugin.interface';
 
@@ -9,6 +11,8 @@ export class RedditPlugin implements Plugin {
   private url: string;
   description: string;
   fetchInProgress = false;
+
+  gifExtensions = ['.webm', '.gif', '.mp4', '.gifv'];
 
   constructor(public command: string, subreddits: string[], limit = 10) {
     this.url = this.buildUrl(subreddits, limit);
@@ -26,7 +30,11 @@ export class RedditPlugin implements Plugin {
     // Cache is empty
     if (!this.images.length) {
       this.fetchInProgress = true;
+      // bot.sendMessage(msg.chat.id, 'Actualizando base de datos. Tardará un poco');
       this.images = await this.request();
+      const promises = this.images.map(scrapeUrl);
+      this.images = await Promise.all(promises);
+      this.images = this.images.filter(n => n); // remove undefined
       this.shuffle(this.images);
       this.fetchInProgress = false;
     }
@@ -34,7 +42,17 @@ export class RedditPlugin implements Plugin {
     if (this.fetchInProgress) {
       bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
     } else {
-      bot.sendPhoto(msg.chat.id, this.images.pop());
+      const image = this.images.pop();
+      console.log(image);
+      const imageExt = path.extname(image);
+      const fn = this.gifExtensions.includes(imageExt) ? 'sendDocument' : 'sendPhoto';
+      console.log(`For the image ${image} I am going to use ${fn}`);
+      try {
+        bot[fn](msg.chat.id, image);
+      } catch (e) {
+        console.log('here?');
+        this.exec(bot, msg);
+      }
     }
   }
 

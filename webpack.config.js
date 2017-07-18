@@ -6,7 +6,7 @@ module.exports = {
     filename: 'bot.js'
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js', '.json']
   },
   devtool: 'source-map',
   module: {

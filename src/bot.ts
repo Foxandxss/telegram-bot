@@ -9,6 +9,10 @@ if (!config.token) {
   process.exit(1);
 }
 
+// const bot = { sendMessage: function() {}};
+
+// availablePlugins[3].exec(bot, null);
+
 const bot = new TelegramBot(config.token, {polling: true});
 
 bot.on('message', (msg) => {
