@@ -4,8 +4,6 @@ const path = require('path');
 
 import { Plugin } from './plugin.interface';
 
-// http://www.reddit.com/r/legalteens+nipples+gonewild+nsfw+nsfw_gif+tits+realgirls/.json?limit=100
-
 export class RedditPlugin implements Plugin {
   private images: string[] = [];
   private url: string;
