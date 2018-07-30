@@ -37,7 +37,7 @@ export class RedditPlugin implements Plugin {
       this.images = await this.request();
       const promises = this.images.map(scrapeUrl);
       this.images = await Promise.all(promises);
-      this.images = this.images.filter(n => n); // remove undefined
+      this.images = this.images.filter(n => n.url); // remove undefined
       this.shuffle(this.images);
       this.fetchInProgress = false;
     }
