@@ -1,13 +1,15 @@
+import { RedditImage } from "../Plugins/reddit";
+
 const path = require('path');
 const scrapeIt = require('scrape-it');
 
-export async function scrapeUrl(url: string) {
-  const hasExt = path.extname(url);
+export async function scrapeUrl(image: RedditImage) {
+  const hasExt = path.extname(image.url);
 
   // it has url, no need to scrape anything
-  if (hasExt) return await Promise.resolve(changeUrl(url));
+  if (hasExt) return await Promise.resolve(changeUrl(image));
   
-  return await scrapeIt(url, {
+  return await scrapeIt(image.url, {
     video: {
       selector: 'source',
       attr: 'src'
@@ -19,22 +21,34 @@ export async function scrapeUrl(url: string) {
   }).then(gif => {
     let video: string = gif.videoMp4 ? gif.videoMp4 : gif.video;
     
-    if (!video) return url;
+    if (!video) return image;
     
-    return video;
+    // return video;
+    return {
+      permalink: image.permalink,
+      url: video
+    };
   }).catch(err => {
     return undefined;
   });
 }
 
-function changeUrl(url: string) {
-  if (path.extname(url) === '.webm') {
-    return url.replace('.webm', '.mp4');
+function changeUrl(image: RedditImage): RedditImage {
+  if (path.extname(image.url) === '.webm') {
+    return {
+      permalink: image.permalink,
+      url: image.url.replace('.webm', '.mp4')
+    };
+    // return url.replace('.webm', '.mp4');
   }
 
-  if (path.extname(url) === '.gifv') {
-    return url.replace('.gifv', '.gif');
+  if (path.extname(image.url) === '.gifv') {
+    return {
+      permalink: image.permalink,
+      url: image.url.replace('.gifv', '.gif')
+    };
+    // return image.replace('.gifv', '.gif');
   }
 
-  return url;
+  return image;
 }

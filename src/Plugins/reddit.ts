@@ -4,8 +4,13 @@ const path = require('path');
 
 import { Plugin } from './plugin.interface';
 
+export interface RedditImage {
+  url: string;
+  permalink: string;
+}
+
 export class RedditPlugin implements Plugin {
-  private images: string[] = [];
+  private images: RedditImage[] = [];
   private url: string;
   description: string;
   fetchInProgress = false;
@@ -41,23 +46,27 @@ export class RedditPlugin implements Plugin {
       bot.sendMessage(msg.chat.id, 'Actualización de la base de datos, vuelve a intentarlo');
     } else {
       const image = this.images.pop();
-      console.log(image);
-      const imageExt = path.extname(image);
+      const imageExt = path.extname(image.url);
       const fn = this.gifExtensions.includes(imageExt) ? 'sendDocument' : 'sendPhoto';
-      console.log(`For the image ${image} I am going to use ${fn}`);
+      console.log(`For the image ${image.url} I am going to use ${fn}`);
       try {
-        bot[fn](msg.chat.id, image);
+        bot[fn](msg.chat.id, image.url);
+        bot.sendMessage(msg.chat.id, `https://reddit.com/${image.permalink}`, { disable_web_page_preview: true});
       } catch (e) {
-        console.log('here?');
         this.exec(bot, msg);
       }
     }
   }
 
-  async request() {
+  async request(): Promise<RedditImage[]> {
     return await fetch(this.url)
     .then(res => res.json())
-    .then(json => json.data.children.map(i => i.data.url));
+    .then(json => json.data.children.map(i => {
+      return {
+        url: i.data.url,
+        permalink: i.data.permalink
+      };
+    }));
   }
 
   shuffle(links) {
