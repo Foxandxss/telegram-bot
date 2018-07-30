@@ -17,4 +17,4 @@ $ npm start
 
 ## Available plugins
 
-For now, just a reddit plugin that show images (not GIFs yet)
+For now, just a reddit plugin that show images and gifs
