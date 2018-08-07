@@ -51,7 +51,7 @@ export class RedditPlugin implements Plugin {
       console.log(`For the image ${image.url} I am going to use ${fn}`);
       try {
         bot[fn](msg.chat.id, image.url);
-        bot.sendMessage(msg.chat.id, `https://reddit.com/${image.permalink}`, { disable_web_page_preview: true});
+        bot.sendMessage(msg.chat.id, `https://reddit.com${image.permalink}`, { disable_web_page_preview: true});
       } catch (e) {
         this.exec(bot, msg);
       }
