@@ -47,11 +47,15 @@ export class RedditPlugin implements Plugin {
     } else {
       const image = this.images.pop();
       const imageExt = path.extname(image.url);
-      const fn = this.gifExtensions.includes(imageExt) ? 'sendDocument' : 'sendPhoto';
+      const fn = this.gifExtensions.includes(imageExt) ? 'sendVideo' : 'sendPhoto';
       console.log(`For the image ${image.url} I am going to use ${fn}`);
       try {
-        bot[fn](msg.chat.id, image.url);
-        bot.sendMessage(msg.chat.id, `https://reddit.com${image.permalink}`, { disable_web_page_preview: true});
+        bot[fn](msg.chat.id, image.url).then(() => {
+          bot.sendMessage(msg.chat.id, `https://reddit.com${image.permalink}`, { disable_web_page_preview: true});
+        })
+        .catch(() => {
+          this.exec(bot, msg);
+        });
       } catch (e) {
         this.exec(bot, msg);
       }
