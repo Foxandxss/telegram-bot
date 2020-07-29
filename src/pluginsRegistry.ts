@@ -9,7 +9,7 @@ export let availablePlugins: Plugin[] = [];
 config.plugins.forEach(plugin => {
   switch (plugin.name) {
     case 'reddit':
-      availablePlugins.push(new RedditPlugin(plugin.command, plugin.subreddits, plugin.limit || 10));
+      availablePlugins.push(new RedditPlugin(plugin.command, plugin.subreddits,  plugin.extraMsg, plugin.limit || 10));
       break;
     case 'help':
       availablePlugins.push(new HelpPlugin(plugin.command));

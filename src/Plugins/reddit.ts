@@ -12,14 +12,16 @@ export interface RedditImage {
 export class RedditPlugin implements Plugin {
   private images: RedditImage[] = [];
   private url: string;
+  extraMsg: string;
   description: string;
   fetchInProgress = false;
 
   gifExtensions = ['.webm', '.gif', '.mp4', '.gifv'];
 
-  constructor(public command: string, subreddits: string[], limit = 10) {
+  constructor(public command: string, subreddits: string[], extraMsg, limit = 10) {
     this.url = this.buildUrl(subreddits, limit);
     this.description = `Una imagen aleatoria de los siguientes subreddits: ${subreddits.join(' ')}`;
+    this.extraMsg = extraMsg || null;
   }
 
   buildUrl(subreddits: string[], limit: number) {
@@ -53,6 +55,9 @@ export class RedditPlugin implements Plugin {
       try {
         bot[fn](msg.chat.id, image.url).then(() => {
           bot.sendMessage(msg.chat.id, `https://reddit.com${image.permalink}`, { disable_web_page_preview: true});
+          if (this.extraMsg) {
+            bot.sendMessage(msg.chat.id, this.extraMsg);
+          }
         })
         .catch(() => {
           this.exec(bot, msg);
