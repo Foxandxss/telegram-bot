@@ -35,6 +35,7 @@ export class RedditPlugin implements Plugin {
       this.fetchInProgress = true;
       // bot.sendMessage(msg.chat.id, 'Actualizando base de datos. Tardará un poco');
       this.images = await this.request();
+      this.images = this.images.filter(n => n.url.startsWith('http'));
       const promises = this.images.map(scrapeUrl);
       this.images = await Promise.all(promises);
       this.images = this.images.filter(n => n.url); // remove undefined
